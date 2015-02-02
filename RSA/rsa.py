@@ -37,9 +37,9 @@ def GCDEx(a, b):
     return a, x, y
 
     
-def LinCon (a, b, m):
-    """Решение линейного сравнение ax = b mod m
-    """
+def Evklid (a, b, m):
+    #Решение линейного сравнение ax = b mod m
+    
     d, t1, t2 = GCDEx(a, m)    
     if b % d != 0:
         return False, 0
@@ -75,7 +75,7 @@ def decrypt(d, n, c):
 
 def encrypt(e, n, m):
     if m >= n:
-        raise ValueError('Message is too large!')
+        raise ValueError('Сообщение большое!')
     
     c = bigNumber.Pow(m, e, n)
     return c
@@ -96,9 +96,9 @@ if __name__ == "__main__":
     e = bigNumber.bigNumber(65537)
     
     #расчет секретной экспоненты d
-    Bool, d = LinCon(e, bigNumber.bigNumber(1), Fi)
+    Bool, d = Evklid(e, bigNumber.bigNumber(1), Fi)
     if not Bool or d == -1:
-        raise ValueError('Something went worng...')
+        raise ValueError('Error...')
     d = d[0]
     
     #получение сообщения и перевод его в большое число

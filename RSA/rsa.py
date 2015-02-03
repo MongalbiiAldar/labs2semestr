@@ -79,9 +79,20 @@ def encrypt(e, n, m):
     
     c = bigNumber.Pow(m, e, n)
     return c
+def get_args():
+    parser = argparse.ArgumentParser(
+        prog="python rsa.py") 
+    parser.add_argument('pubkey')
+    parser.add_argument('privkey')
+    parser.add_argument('infile')
+    parser.add_argument('EncryptedFile')
+    parser.add_argument('DecryptedFile')
+    return parser.parse_args() 
 
 if __name__ == "__main__":
+    args = get_args()
     
+
     #генерирование простых чисел p и q, с заданной длиной, причем p!=q
     p = primes.GeneratePrime(32)
     q = primes.GeneratePrime(32)
@@ -101,22 +112,33 @@ if __name__ == "__main__":
         raise ValueError('Error...')
     d = d[0]
     
+    #cоздание файлов открытого и закрытого ключа
+    pub_key = "\n".join(map(str, (e, n)))#связка открытого ключа
+    priv_key = "\n".join(map(str, (d, n)))#связка закрытого ключа
+    
+    with open(args.pubkey, 'w') as Pubfile:
+        Pubfile.write(pub_key)
+
+    with open(args.privkey, 'w') as Privfile:
+        Privfile.write(priv_key)
+        
+    
     #получение сообщения и перевод его в большое число
-    File = open("m.txt","r") #открываем файл на чтение
+    File = open(args.infile,"r") #открываем файл на чтение
     m = int(File.read())#считываем файл целиком
     File.close()
     m = bigNumber.bigNumber(m)
     
     #шифрование исходного сообщения и запись его в файл
     c=encrypt(e,n,m)
-    File1 = open("c.txt","w")
+    File1 = open(args.EncryptedFile,"w")
     EncryptedText=str(c)    
     File1.write(EncryptedText)	
     File1.close()
     
     #дешифрование и запись его в файл
     k=decrypt(d,n,c)
-    File2 = open("DecryptTxt","w")
+    File2 = open(args.DecryptedFile,"w")
     DecryptText=str(k)
     File2.write(DecryptText)
     File2.close()

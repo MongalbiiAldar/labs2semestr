@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 #coding: UTF-8
+import argparse
 import sys
 
 import bigNumber.bigNumber as bigNumber
@@ -17,18 +18,26 @@ def TheFirstTask(p, q, g):
     r = bigNumber.GenerateRandomMax(q)
     x = bigNumber.Pow(g, r, p)
     return r,x
-	
+def get_args():
+    parser = argparse.ArgumentParser(
+        prog="python schnorr.py") 
+    parser.add_argument('pubkey')
+    parser.add_argument('privkey')
+    
+   
+    return parser.parse_args()	
 if __name__ == "__main__":
+    args = get_args()
     #Генерация ключей
     p, q, g, y, w = Generation_keys()# (p,q,g,y)-открытый ключ (w)-закрытый ключ
     
     #запись открытых ключей в файл
-    f = open ("pub.key","w")
+    f = open (args.pubkey,"w")
     PubKey = "\n".join(map(str, (p, q, g, y)))
     f.write(PubKey)    
     
     #запись закрытого ключа в файл
-    f = open ("priv.key","w")
+    f = open (args.privkey,"w")
     PrivKey=str(w)
     f.write(PrivKey)
     # Алгоритм протокола. Предварительная обработка
